@@ -1,0 +1,42 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Virtual environments
+venv/
+.env
+.venv/
+env/
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# macOS specific files
+.DS_Store
+
+# Data files that shouldn't be versioned
+data/raw/*
+data/processed/*
+data/sentiment_file/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/sentiment_file/.gitkeep
+
+# Large model files excluded because they exceed GitHub's file size limit
+models_saved/*.pth
+distilbert_news_NVDA*/model.safetensors
+
+# Logs
+*.log
