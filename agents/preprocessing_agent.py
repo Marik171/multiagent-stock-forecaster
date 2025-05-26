@@ -17,7 +17,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 class PreprocessingAgent:
-    """Agent for preprocessing and merging stock and news data."""
+    """Agent for preprocessing and merging stock and news data (YouTube removed)."""
     
     def __init__(self):
         """Initialize PreprocessingAgent."""
@@ -32,10 +32,72 @@ class PreprocessingAgent:
             u"\U0001F300-\U0001F5FF"  # symbols & pictographs
             u"\U0001F680-\U0001F6FF"  # transport & map symbols
             u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
-            "]+", flags=re.UNICODE)
+            "]", flags=re.UNICODE)
         self.hashtag_pattern = re.compile(r'#\w+')
         self.promo_pattern = re.compile(r'(subscribe|follow|check.*out|visit|join|dm|message)', re.IGNORECASE)
+    
+    def run(self, ticker: str = "NVDA", stock_df: pd.DataFrame = None, news_df: pd.DataFrame = None) -> pd.DataFrame:
+        """
+        Load, preprocess, merge, and save the dataset. Accepts dataframes directly or loads from file if not provided.
         
+        Args:
+            ticker (str): Stock ticker symbol
+            stock_df (pd.DataFrame, optional): Stock data
+            news_df (pd.DataFrame, optional): News data
+            
+        Returns:
+            pd.DataFrame: Merged and processed dataset
+        """
+        try:
+            # Load all data sources if not provided
+            if stock_df is None:
+                stock_df = self._load_stock_data(ticker)
+            if news_df is None:
+                news_df = self._load_news_data(ticker)
+            else:
+                # Ensure 'date' column exists in news_df
+                if 'date' not in news_df.columns:
+                    if 'datetime' in news_df.columns:
+                        news_df['date'] = pd.to_datetime(news_df['datetime']).dt.strftime('%Y-%m-%d')
+                    else:
+                        raise ValueError("news_df must have a 'date' or 'datetime' column")
+                # Clean titles and aggregate if needed
+                if 'title' in news_df.columns:
+                    news_df['title'] = news_df['title'].apply(self._clean_text)
+                    # Group by date and concatenate titles
+                    news_df = news_df.groupby('date')['title'].agg(lambda x: ' | '.join(x)).reset_index()
+                    news_df.columns = ['date', 'news_text']
+                elif 'news_text' not in news_df.columns:
+                    raise ValueError("news_df must have either 'title' or 'news_text' column")
+            # Ensure merge columns are string type in YYYY-MM-DD format
+            stock_df['Date'] = pd.to_datetime(stock_df['Date']).dt.strftime('%Y-%m-%d')
+            news_df['date'] = news_df['date'].astype(str)
+            # Use stock data as the base for left join
+            merged_df = stock_df.copy()
+            merged_df = merged_df.merge(
+                news_df,
+                left_on='Date',
+                right_on='date',
+                how='left'
+            )
+            # Clean up merged dataframe
+            merged_df = merged_df.drop(columns=['date'], errors='ignore')
+            # Fill NaN values in text columns with empty strings
+            text_columns = ['news_text']
+            for col in text_columns:
+                if col in merged_df.columns:
+                    merged_df[col] = merged_df[col].fillna('')
+            # Save processed dataset
+            output_path = self.data_processed / f"{ticker}_merged_for_sentiment.csv"
+            merged_df.to_csv(output_path, index=False, encoding='utf-8')
+            logger.info(f"Saved merged dataset to {output_path}")
+            
+            return merged_df
+            
+        except Exception as exc:
+            logger.error(f"Error processing data: {str(exc)}")
+            raise
+
     def _find_latest_file(self, pattern: str) -> Optional[Path]:
         """Find the most recent file matching the pattern in raw data directory."""
         files = list(self.data_raw.glob(pattern))
@@ -106,54 +168,3 @@ class PreprocessingAgent:
         news_grouped.columns = ['date', 'news_text']
         
         return news_grouped
-    
-    def run(self, ticker: str = "NVDA") -> pd.DataFrame:
-        """
-        Load, preprocess, merge, and save the dataset.
-        
-        Args:
-            ticker (str): Stock ticker symbol
-            
-        Returns:
-            pd.DataFrame: Merged and processed dataset
-        """
-        try:
-            # Load all data sources
-            stock_df = self._load_stock_data(ticker)
-            news_df = self._load_news_data(ticker)
-            
-            # Use stock data as the base for left joins
-            merged_df = stock_df.copy()
-            
-            # Merge news data
-            merged_df = merged_df.merge(
-                news_df,
-                left_on='Date',
-                right_on='date',
-                how='left'
-            )
-            
-            # Clean up merged dataframe
-            merged_df = merged_df.drop(columns=['date'], errors='ignore')
-            
-            # Fill NaN values in text columns with empty strings
-            text_columns = ['news_text']
-            merged_df[text_columns] = merged_df[text_columns].fillna('')
-            
-            # Save processed dataset
-            output_path = self.data_processed / f"{ticker}_merged_for_sentiment.csv"
-            merged_df.to_csv(output_path, index=False, encoding='utf-8')
-            logger.info(f"Saved merged dataset to {output_path}")
-            
-            return merged_df
-            
-        except Exception as e:
-            logger.error(f"Error processing data: {str(e)}")
-            raise
-
-if __name__ == "__main__":
-    agent = PreprocessingAgent()
-    ticker = "TSLA"  # Example ticker
-    merged_data = agent.run(ticker)
-    logger.info(f"Merged data shape: {merged_data.shape}")
-    logger.info(f"Sample data:\n{merged_data.head()}")

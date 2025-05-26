@@ -22,41 +22,26 @@ It features:
 ```bash
 .
 ├── agents/
-│   ├── balanced_sentiment_agent.py
+│   ├── stock_fetch_agent.py
 │   ├── news_scraper_agent.py
-│   ├── prediction_agent.py
+│   ├── youtube_scraper_agent.py
 │   ├── preprocessing_agent.py
-│   ├── reasoning_agent.py
 │   ├── sentiment_agent.py
-│   └── stock_fetch_agent.py
+│   ├── prediction_agent.py
+│   └── reasoning_agent.py
 ├── app/
-│   └── (UI components)
-├── config/
-│   └── settings.py
+│   ├── main.py
+│   └── llm_recommendation.py
 ├── data/
-│   ├── annotated/
-│   ├── processed/
 │   ├── raw/
-│   └── sentiment_file/
-├── data_predictions/
-├── distilbert_news_NVDA/
-├── distilbert_news_NVDA_balanced/
-├── models/
-│   ├── emotion_classifier.py
-│   └── lstm_model.py
+│   └── processed/
 ├── models_saved/
-│   ├── feature_scaler.pkl
-│   └── lstm_model.pth
 ├── reports/
 ├── utils/
-│   ├── data_cleaning.py
-│   ├── feature_engineering.py
-│   └── technical_indicators.py
-├── analyze_sentiment.py
-├── fine_tune_distilbert_news.py
-├── integrate_distilbert_agent.py
+│   └── feature_engineering.py
+├── .env
 ├── requirements.txt
-└── test scripts (various)
+└── README.md
 ```
 
 ---

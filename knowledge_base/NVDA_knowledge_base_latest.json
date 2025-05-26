@@ -1,0 +1,92 @@
+{
+  "metadata": {
+    "ticker": "NVDA",
+    "created_at": "2025-05-26T10:29:55.921289",
+    "version": "1.0",
+    "data_sources": [
+      "prediction_data",
+      "reasoning_analysis"
+    ],
+    "summary": "Comprehensive knowledge base for NVDA stock analysis"
+  },
+  "stock_overview": {
+    "error": "No stock data available"
+  },
+  "technical_analysis": {},
+  "sentiment_analysis": {
+    "error": "No sentiment data available"
+  },
+  "news_analysis": {
+    "total_articles": 0,
+    "date_range": {
+      "start": null,
+      "end": null
+    },
+    "recent_headlines": [],
+    "key_topics": []
+  },
+  "predictions": {
+    "next_day_prediction": 132.01938213772243,
+    "next_week_average": 133.77614347928835,
+    "prediction_range": {
+      "min": 108.72954644459224,
+      "max": 137.85449295043946,
+      "latest": 118.6472531919126
+    },
+    "total_predictions": 47
+  },
+  "investment_recommendation": {
+    "action": "BUY",
+    "confidence": "HIGH",
+    "position_size": "Medium (10-15%)",
+    "expected_returns": {
+      "1_week": 2.5,
+      "1_month": 8.2,
+      "3_months": 15.7
+    },
+    "risk_adjusted_score": 75,
+    "strategy_used": "balanced",
+    "analysis_timestamp": "2025-05-26T10:29:55.928236"
+  },
+  "risk_assessment": {
+    "risk_level": "MEDIUM",
+    "risk_score": 60,
+    "risk_factors": [],
+    "volatility_assessment": "MEDIUM",
+    "market_conditions": "BULLISH"
+  },
+  "key_insights": [
+    "Investment recommendation: BUY with HIGH% confidence based on comprehensive analysis",
+    "Latest price prediction: $118.65"
+  ],
+  "query_examples": [
+    {
+      "query": "What is the current investment recommendation for NVDA?",
+      "description": "Get the latest investment action and confidence level"
+    },
+    {
+      "query": "What are the price predictions for NVDA?",
+      "description": "Get short-term and long-term price forecasts"
+    },
+    {
+      "query": "How risky is investing in NVDA?",
+      "description": "Get risk assessment and suitability for different investor types"
+    },
+    {
+      "query": "What is the market sentiment for NVDA?",
+      "description": "Get sentiment analysis from news and social media"
+    },
+    {
+      "query": "What are the key technical indicators for NVDA?",
+      "description": "Get RSI, MACD, moving averages, and other technical signals"
+    },
+    {
+      "query": "What are the recent news highlights for NVDA?",
+      "description": "Get recent news articles and key developments"
+    },
+    {
+      "query": "What are the key insights for NVDA investment?",
+      "description": "Get summarized insights and investment highlights"
+    }
+  ]
+}

@@ -86,18 +86,30 @@ class StockFetchAgent:
 
         return df
 
-    def _save_data(self, df: pd.DataFrame, symbol: str) -> None:
-        """Save the data to CSV file."""
+    def _save_data(self, df: pd.DataFrame, symbol: str, start_date=None, end_date=None, interval="1d") -> None:
+        """Save the data to CSV file, but only if it doesn't already exist for this ticker, date range, and interval."""
         try:
-            # Create filename with timestamp
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            filename = f"{symbol}_raw_{timestamp}.csv"
+            start_str = pd.to_datetime(start_date).strftime('%Y%m%d') if start_date else 'unknown'
+            end_str = pd.to_datetime(end_date).strftime('%Y%m%d') if end_date else 'unknown'
+            # Sanitize interval for filename (remove slashes, spaces, etc.)
+            safe_interval = str(interval).replace('/', '_').replace(' ', '_')
+            filename = f"{symbol}_raw_{start_str}_{end_str}_{safe_interval}.csv"
             filepath = self.data_path / filename
-            
-            # Save to CSV
-            df.to_csv(filepath)
+            if filepath.exists():
+                logger.info(f"Data file already exists for {symbol} {start_str}-{end_str} interval {interval}, not saving again: {filepath}")
+                return
+            # Check for duplicate content (by date range) in all files for this symbol
+            for existing_file in self.data_path.glob(f"{symbol}_raw_*_{safe_interval}.csv"):
+                try:
+                    existing_df = pd.read_csv(existing_file, parse_dates=['Date'])
+                    if not existing_df.empty and not df.empty:
+                        if existing_df['Date'].min() == df['Date'].min() and existing_df['Date'].max() == df['Date'].max():
+                            logger.info(f"Duplicate data content found for {symbol} {start_str}-{end_str} interval {interval}, not saving again: {existing_file}")
+                            return
+                except Exception:
+                    continue
+            df.to_csv(filepath, index=False)
             logger.info(f"Data saved to {filepath}")
-            
         except Exception as e:
             error_msg = f"Error saving data for {symbol}: {str(e)}"
             logger.error(error_msg)
@@ -141,8 +153,11 @@ class StockFetchAgent:
             # Calculate technical indicators
             df = self._calculate_indicators(df)
             
-            # Save raw data
-            self._save_data(df, symbol)
+            # Ensure the index (date) is a proper column
+            df = df.reset_index()
+            
+            # Save raw data (pass start/end date and interval)
+            self._save_data(df, symbol, start_date, end_date, interval)
             
             return df
             
@@ -167,4 +182,3 @@ if __name__ == "__main__":
         except StockFetchAgentException as e:
             logger.error(f"Failed to fetch data: {e}")
 
-         

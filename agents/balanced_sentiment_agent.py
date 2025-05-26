@@ -276,17 +276,18 @@ class DistilBERTSentimentAgent:
         
         return results
     
-    def process_dataframe(self, df, text_column="title", batch_size=32):
+    def process_dataframe(self, df, text_column="news_text", batch_size=32, output_path=None):
         """
         Process a DataFrame containing a column of text data.
         
         Args:
             df: DataFrame to process
-            text_column: Name of the column containing text data
+            text_column: Name of the column containing text data (default: 'news_text')
             batch_size: Batch size for processing
+            output_path: Optional path to save the output CSV file
             
         Returns:
-            DataFrame with sentiment analysis results added as columns
+            DataFrame with a single column 'sentiment_score' (POSITIVE prob - NEGATIVE prob)
         """
         if text_column not in df.columns:
             raise ValueError(f"Column '{text_column}' not found in DataFrame")
@@ -301,18 +302,22 @@ class DistilBERTSentimentAgent:
         logger.info(f"Processed {len(texts)} texts in {elapsed_time:.2f} seconds " + 
                    f"({len(texts)/elapsed_time:.2f} texts/sec)")
         
-        # Add results to DataFrame
-        df["sentiment_label"] = [r["predicted_label"] for r in results]
-        df["sentiment_confidence"] = [r["confidence"] for r in results]
-        df["sentiment_negative_prob"] = [r["probabilities"]["NEGATIVE"] for r in results]
-        df["sentiment_neutral_prob"] = [r["probabilities"]["NEUTRAL"] for r in results]
-        df["sentiment_positive_prob"] = [r["probabilities"]["POSITIVE"] for r in results]
+        # Compute sentiment_score as POSITIVE prob - NEGATIVE prob
+        sentiment_scores = [r["probabilities"]["POSITIVE"] - r["probabilities"]["NEGATIVE"] for r in results]
         
-        # Map sentiment_label to sentiment_score
-        sentiment_map = {"NEGATIVE": -1, "NEUTRAL": 0, "POSITIVE": 1}
-        df["sentiment_score"] = df["sentiment_label"].map(sentiment_map)
+        # Add as new column to original DataFrame (do not drop any columns)
+        df_out = df.copy()
+        df_out["news_sentiment_score"] = sentiment_scores
         
-        return df
+        # Save to /data/sentiment_file if output_path is provided
+        if output_path is not None:
+            output_dir = Path(__file__).parent.parent / "data" / "sentiment_file"
+            output_dir.mkdir(parents=True, exist_ok=True)
+            full_path = output_dir / output_path
+            df_out.to_csv(full_path, index=False)
+            logger.info(f"Sentiment results saved to {full_path}")
+        
+        return df_out
         
 # Example usage
 if __name__ == "__main__":
@@ -327,27 +332,15 @@ if __name__ == "__main__":
     
     # Initialize the agent
     agent = DistilBERTSentimentAgent(model_path=args.model_path)
-    
-    if args.input_file:
-        # Process CSV file
-        df = pd.read_csv(args.input_file)
-        result_df = agent.process_dataframe(df, text_column=args.text_column)
+
+    df = pd.read_csv(args.input_file)
+    result_df = agent.process_dataframe(df, text_column=args.text_column)
         
         # Save results
-        output_file = args.output_file or args.input_file.replace(".csv", "_sentiment.csv")
-        result_df.to_csv(output_file, index=False)
-        logger.info(f"Results saved to {output_file}")
-        
-        # Print sentiment distribution
-        print("Sentiment distribution:")
-        print(result_df["sentiment_label"].value_counts())
-    else:
-        # Interactive mode
-        print("Interactive mode. Type 'quit' to exit.")
-        while True:
-            text = input("Enter text to analyze: ")
-            if text.lower() == 'quit':
-                break
-            result = agent.analyze_text(text)
-            print(f"Sentiment: {result['predicted_label']} (confidence: {result['confidence']:.4f})")
-            print(f"Probabilities: {result['probabilities']}")
+    output_file = args.output_file or args.input_file.replace(".csv", "_sentiment.csv")
+    result_df.to_csv(output_file, index=False)
+    logger.info(f"Results saved to {output_file}")
+
+    # Print sentiment distribution
+    print("Sentiment distribution:")
+    print(result_df["sentiment_label"].value_counts())

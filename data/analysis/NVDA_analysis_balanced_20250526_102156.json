@@ -1,0 +1,52 @@
+{
+  "ticker": "NVDA",
+  "strategy": "balanced",
+  "timestamp": "2025-05-26T10:21:56.942308",
+  "momentum": {
+    "recent_momentum": -3.157050827510975,
+    "short_term_return": 1.5227934577885154,
+    "medium_term_return": 5.000000000000009,
+    "long_term_return": -9.629629629629633,
+    "trend_strength": 88.88888888888889,
+    "volatility": 35.30715335496876,
+    "momentum_score": -0.8171286848612299
+  },
+  "sentiment": {
+    "avg_sentiment": 0.029823715945533694,
+    "sentiment_trend": 0.6579450214760779,
+    "sentiment_volatility": 0.40525593480956873,
+    "sentiment_momentum": 0.0,
+    "bullish_signals": "9",
+    "bearish_signals": "5"
+  },
+  "risk": {
+    "risk_score": 14.097217261252796,
+    "max_drawdown": 3.157050827510975,
+    "volatility": 34.36545955994882,
+    "prediction_accuracy": 98.69404458258514,
+    "forecast_uncertainty": 4.7691413962986005
+  },
+  "targets": {
+    "current": 131.2899932861328,
+    "target_1w": 133.28926871462502,
+    "target_1m": 122.0510678326642,
+    "target_3m": 118.64725319191261,
+    "conservative_1w": 131.20420286400292,
+    "aggressive_1w": 135.37433456524712,
+    "conservative_1m": 117.88093613141999,
+    "aggressive_1m": 126.22119953390842,
+    "conservative_3m": 112.39205564004628,
+    "aggressive_3m": 124.90245074377894
+  },
+  "recommendation": {
+    "action": "BUY",
+    "confidence": 63.7,
+    "overall_score": 63.7,
+    "position_size": "Large (15-25%)",
+    "expected_return_1w": 1.52,
+    "expected_return_1m": -7.04,
+    "expected_return_3m": -9.63,
+    "risk_adjusted_score": 56.6
+  },
+  "detailed_reasoning": "## Investment Analysis for NVDA\n\n### Executive Summary\n**Recommendation:** BUY (Confidence: 63.7%)\n**Expected Returns:** 1W: 1.52%, 1M: -7.04%, 3M: -9.63%\n**Position Size:** Large (15-25%)\n\n### Price Analysis\n- **Current Price:** $131.29\n- **1-Week Target:** $133.29 (+1.5%)\n- **1-Month Target:** $122.05 (-7.0%)\n- **3-Month Target:** $118.65 (-9.6%)\n\n### Technical Momentum\n- **Momentum Score:** -0.8\n- **Trend Strength:** 88.9%\n- **Recent Performance:** -3.2%\n- **Volatility:** 35.3% (annualized)\n\n### Sentiment Analysis\n- **Average Sentiment:** 0.030 (Neutral)\n- **Sentiment Trend:** Improving\n- **Bullish Signals:** 9\n- **Bearish Signals:** 5\n\n### Risk Assessment\n- **Overall Risk Score:** 14.1/100 (Low Risk)\n- **Maximum Drawdown:** 3.2%\n- **Prediction Accuracy:** 98.7%\n- **Forecast Uncertainty:** 4.8%\n\n### Key Insights\n- Strong upward trend momentum supports bullish outlook\n- Low risk profile suitable for conservative investors\n\n### Strategy Recommendation\nGiven the BUY recommendation with 63.7% confidence, \ninvestors should consider large (15-25%) based on current market conditions \nand risk tolerance. The risk-adjusted score of 56.6 suggests \nneutral \nrisk-return profile.\n\n### Disclaimers\n- This analysis is based on historical data and predicted prices\n- Past performance does not guarantee future results\n- Consider your personal risk tolerance and investment objectives\n- Consult with a financial advisor before making investment decisions"
+}

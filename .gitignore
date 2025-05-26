@@ -16,20 +16,27 @@ env/
 
 # IDE specific files
 .idea/
-.vscode/
+.vscode/settings.json.backup*
+.vscode/*.log
 *.swp
 *.swo
+
+# VS Code performance optimizations
+.vscode/PythonImportHelper-v2-Completion.json
+*.code-workspace.backup
 
 # Jupyter Notebook
 .ipynb_checkpoints
 
 # macOS specific files
 .DS_Store
+._*
 
 # Data files that shouldn't be versioned
 data/raw/*
 data/processed/*
 data/sentiment_file/*
+data/cache/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 !data/sentiment_file/.gitkeep
@@ -37,6 +44,19 @@ data/sentiment_file/*
 # Large model files excluded because they exceed GitHub's file size limit
 models_saved/*.pth
 distilbert_news_NVDA*/model.safetensors
+distilbert_news_NVDA*/training_*
+distilbert_news_NVDA_balanced*/training_*
 
-# Logs
+# Images and large media files
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.tiff
+Gemini_Generated_Image_*
+
+# Temporary files
+*.tmp
+*.temp
 *.log

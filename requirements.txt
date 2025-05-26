@@ -9,6 +9,8 @@ youtube_transcript_api>=0.6.1
 pandas>=2.0.0
 numpy>=1.24.0
 pandas-ta==0.3.14b0  # Pinned to specific version for compatibility
+pandas_market_calendars>=5.0.0  # For stock market trading days
+prophet>=1.1.4  # Facebook Prophet for time series forecasting
 
 # Text Processing and ML
 transformers>=4.21.0
@@ -28,6 +30,8 @@ python-dotenv>=1.0.0
 requests>=2.31.0
 streamlit>=1.24.0
 fpdf2>=2.7.0
+joblib>=1.2.0  # For model serialization
+kaleido>=0.2.1  # For exporting Plotly to static images
 
 # Selenium for web scraping
 selenium>=4.9.0
